@@ -1,10 +1,14 @@
+import datetime
+from sqlalchemy import Column, Integer, String, DateTime
+from app.database import Base
 
 
-class User:
+class User(Base):
+    __tablename__ = "users"
 
-    def __init__(self, id, email, password_hash, role, created_at):
-        self.id = id                          # Atributo de instância
-        self.email = email                    # Atributo de instância
-        self.password_hash = password_hash    # Atributo de instância
-        self.role = role                      # Atributo de instância
-        self.created_at = created_at          # Atributo de instância
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, nullable=False, index=True)
+    password_hash = Column(String)
+    role = Column(String)
+    created_at = Column(DateTime)
+
