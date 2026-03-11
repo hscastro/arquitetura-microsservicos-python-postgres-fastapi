@@ -7,6 +7,13 @@ from app.services import user_service
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
+@router.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "user_service"
+    }
+
 
 @router.get("/", response_model=list[UserResponse])
 def get_users(db: Session = Depends(get_db)):

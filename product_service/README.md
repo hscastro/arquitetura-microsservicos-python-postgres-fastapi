@@ -25,6 +25,7 @@ Este serviço não contém regras de negócio de outros domínios, mantendo o pr
 Arquitetura do Microserviço
 
 O serviço segue uma arquitetura em camadas:
+
 Controller (API)
      │
      ▼

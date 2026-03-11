@@ -8,6 +8,14 @@ from app.services import product_service
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
+@router.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "product_service"
+    }
+
+
 @router.get("/", response_model=list[ProductResponse])
 def get_products(db: Session = Depends(get_db)):
     return product_service.get_products(db)
