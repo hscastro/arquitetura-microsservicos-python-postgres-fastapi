@@ -70,11 +70,10 @@ app
 │   ├── order_model.py
 │   └── order_item_model.py
 │
-├── schemas
-│   └── order_schema.py
-│
-└── core
-    └── config.py
+├──schemas
+    └── order_schema.py
+
+
 ```
 
 ---

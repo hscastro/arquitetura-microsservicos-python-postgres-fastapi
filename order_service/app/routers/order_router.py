@@ -11,7 +11,7 @@ router = APIRouter(prefix="/orders", tags=["Orders"])
 def health_check():
     return {
         "status": "ok",
-        "service": "product_service"
+        "service": "order_service"
     }
 
 @router.post("/", response_model=OrderResponse)

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -6,7 +6,7 @@ class UserBase(BaseModel):
     email: str
     password_hash: str
     role: str
-    created_at: str
+    created_at: datetime
 
 
 class UserCreate(UserBase):

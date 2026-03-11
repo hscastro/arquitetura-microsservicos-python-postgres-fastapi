@@ -10,5 +10,5 @@ class User(Base):
     email = Column(String, unique=True, nullable=False, index=True)
     password_hash = Column(String)
     role = Column(String)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
