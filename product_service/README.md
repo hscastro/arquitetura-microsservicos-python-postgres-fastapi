@@ -1,157 +1,61 @@
-Product Service
+# Product Service
 
-Microserviço responsável pelo gerenciamento de produtos dentro do ecossistema da aplicação.
-Ele disponibiliza uma API REST para operações de CRUD de produtos, permitindo que outros serviços consultem, criem, atualizem ou removam produtos.
+Microserviço responsável pelo **gerenciamento de produtos** dentro da arquitetura de microserviços do sistema de e-commerce.
 
-Este serviço foi desenvolvido utilizando arquitetura em camadas, promovendo separação de responsabilidades, facilidade de manutenção e testabilidade.
+Este serviço fornece uma API REST para realizar operações de **CRUD de produtos**, permitindo que outros serviços (como `order_service`) consultem os produtos disponíveis no sistema.
 
+---
 
-Responsabilidades do Serviço
+# Responsabilidade
 
-O Product Service é responsável por:
+O **product_service** gerencia:
 
-Cadastro de produtos
+* criação de produtos
+* listagem de produtos
+* consulta de produto por ID
+* atualização de produtos
+* remoção de produtos
 
-Consulta de produtos
+---
 
-Atualização de informações de produtos
+# Tecnologias Utilizadas
 
-Exclusão de produtos
+* Python 3.10+
+* FastAPI
+* SQLAlchemy
+* PostgreSQL
+* Pydantic
+* Uvicorn
+* Docker
 
-Persistência de dados no banco
+---
 
-Este serviço não contém regras de negócio de outros domínios, mantendo o princípio de single responsibility para microserviços.
+# Arquitetura
 
-Arquitetura do Microserviço
+Este serviço faz parte de uma arquitetura baseada em **microservices**.
 
-O serviço segue uma arquitetura em camadas:
+```text id="h5yx1k"
+Client
+   │
+   ▼
+API Gateway
+   │
+   ├── user_service
+   ├── product_service
+   └── order_service
+```
 
-Controller (API)
-     │
-     ▼
-Service Layer
-     │
-     ▼
-Repository / ORM
-     │
-     ▼
-Database
+O **product_service** é responsável exclusivamente pelo **domínio de produtos**.
 
-Camadas
+---
 
-Controller (Router)
-Responsável por expor os endpoints HTTP.
+# Estrutura do Projeto
 
-Service Layer
-Contém as regras de negócio do domínio de produtos.
-
-Repository / ORM
-Responsável pela comunicação com o banco via SQLAlchemy.
-
-Database
-Persistência dos dados.
-
-Diagrama de Arquitetura
-
-                ┌─────────────────────┐
-                │     Client / API    │
-                │ (Frontend / Other MS)│
-                └───────────┬─────────┘
-                            │
-                            ▼
-                  ┌──────────────────┐
-                  │     FastAPI      │
-                  │  Product Router  │
-                  └──────────┬───────┘
-                             │
-                             ▼
-                  ┌──────────────────┐
-                  │  Product Service │
-                  │ Business Logic   │
-                  └──────────┬───────┘
-                             │
-                             ▼
-                  ┌──────────────────┐
-                  │   SQLAlchemy ORM │
-                  │     Repository   │
-                  └──────────┬───────┘
-                             │
-                             ▼
-                  ┌──────────────────┐
-                  │     Database     │
-                  │  (PostgreSQL /   │
-                  │    MySQL etc)    │
-                  └──────────────────┘
-
-Listar Produtos
-
-Retorna todos os produtos cadastrados.
-
-Response
-
-[
-  {
-    "id": 1,
-    "name": "Product A",
-    "price": 100.0,
-    "description": "Example product"
-  }
-]
-
-Buscar Produto por ID
-
-Retorna um produto específico.
-
-GET /products/{product_id}
-
-Response
-
-{
-  "id": 1,
-  "name": "Product A",
-  "price": 100.0,
-  "description": "Example product"
-}
-
-Criar Produto
-
-Cria um novo produto.
-
-POST /products/
-
-Request Body
-
-{
-  "name": "Product A",
-  "price": 100.0,
-  "description": "Example product"
-}
-
-Response
-
-{
-  "id": 1,
-  "name": "Product A",
-  "price": 100.0,
-  "description": "Example product"
-}
-
-Estrutura do Projeto
-
-Exemplo de organização recomendada:
-
+```id="s7l4m2"
 app
 │
 ├── main.py
-│
-├── database
-│   └── database.py
-│
-├── models
-│   └── product_model.py
-│
-├── schemas
-│   └── product_schema.py
+├── database.py
 │
 ├── routers
 │   └── product_router.py
@@ -159,43 +63,290 @@ app
 ├── services
 │   └── product_service.py
 │
-└── repositories
-    └── product_repository.py
+├── models
+│   └── product_model.py
+│
+├── schemas
+│   └── product_schema.py
+│
+└── core
+    └── config.py
+```
 
-Execução do Projeto
-Instalar dependências
+---
 
+# Banco de Dados
+
+Tabela: **products**
+
+| Campo       | Tipo     | Descrição                |
+| ----------- | -------- | ------------------------ |
+| id          | integer  | Identificador do produto |
+| name        | string   | Nome do produto          |
+| description | string   | Descrição do produto     |
+| price       | float    | Preço do produto         |
+| created_at  | datetime | Data de criação          |
+
+---
+
+# Executando o Serviço
+
+Instalar dependências:
+
+```bash id="7ar8xg"
 pip install -r requirements.txt
+```
 
-Rodar aplicação
+Executar a aplicação:
 
+```bash id="9fkm1w"
 uvicorn app.main:app --reload
+```
 
-Servidor disponível em:
+A API ficará disponível em:
 
+```id="4k0v19"
 http://localhost:8000
+```
 
-Documentação Automática
+---
 
-O FastAPI gera documentação automaticamente:
+# Documentação da API
 
-Swagger
+FastAPI gera documentação automática.
 
+Swagger:
+
+```id="n3y6gh"
 http://localhost:8000/docs
+```
 
-Redoc
+Redoc:
 
+```id="g5czl8"
 http://localhost:8000/redoc
+```
 
+---
 
-Boas Práticas Aplicadas
+# Endpoints
 
-Separação de camadas
+Base URL:
 
-Dependency Injection
+```id="x3z6kq"
+/products
+```
 
-Validação de dados com Pydantic
+---
 
-Padrão REST
+# Health Check
 
-Código desacoplado
+Verifica se o serviço está ativo.
+
+```id="v3f9bn"
+GET /products/health
+```
+
+Response:
+
+```json id="27jv06"
+{
+  "status": "ok",
+  "service": "product_service"
+}
+```
+
+---
+
+# Listar Produtos
+
+Retorna todos os produtos cadastrados.
+
+```id="8u0vzy"
+GET /products
+```
+
+Response:
+
+```json id="v4p3h0"
+[
+  {
+    "id": 1,
+    "name": "Notebook",
+    "description": "Notebook Dell",
+    "price": 3500
+  }
+]
+```
+
+---
+
+# Buscar Produto por ID
+
+Retorna um produto específico.
+
+```id="6s6xai"
+GET /products/{product_id}
+```
+
+Exemplo:
+
+```id="ueox6s"
+GET /products/1
+```
+
+Response:
+
+```json id="3h9r0n"
+{
+  "id": 1,
+  "name": "Notebook",
+  "description": "Notebook Dell",
+  "price": 3500
+}
+```
+
+---
+
+# Criar Produto
+
+Cria um novo produto.
+
+```id="q08k0i"
+POST /products
+```
+
+Request:
+
+```json id="fkt4y9"
+{
+  "name": "Mouse Gamer",
+  "description": "Mouse RGB",
+  "price": 120
+}
+```
+
+Response:
+
+```json id="fxnytr"
+{
+  "id": 2,
+  "name": "Mouse Gamer",
+  "description": "Mouse RGB",
+  "price": 120
+}
+```
+
+---
+
+# Atualizar Produto
+
+Atualiza os dados de um produto.
+
+```id="dfn9ea"
+PUT /products/{product_id}
+```
+
+Request:
+
+```json id="yqqm6p"
+{
+  "name": "Mouse Gamer Pro",
+  "description": "Mouse RGB atualizado",
+  "price": 150
+}
+```
+
+---
+
+# Deletar Produto
+
+Remove um produto do sistema.
+
+```id="nf1egf"
+DELETE /products/{product_id}
+```
+
+Response:
+
+```json id="7ntvyf"
+{
+  "message": "Product deleted"
+}
+```
+
+---
+
+# Modelos de Dados
+
+## ProductCreate
+
+Usado para criação de produtos.
+
+```id="ysclyq"
+name: str
+description: str
+price: float
+```
+
+---
+
+## ProductUpdate
+
+Usado para atualização de produtos.
+
+```id="ef2p9s"
+name: Optional[str]
+description: Optional[str]
+price: Optional[float]
+```
+
+---
+
+## ProductResponse
+
+Resposta retornada pela API.
+
+```id="ht6ksn"
+id: int
+name: str
+description: str
+price: float
+```
+
+---
+
+# Executando com Docker
+
+Build da imagem:
+
+```bash id="1h4p2q"
+docker build -t product_service .
+```
+
+Executar container:
+
+```bash id="x1sh0k"
+docker run -p 8000:8000 product_service
+```
+
+---
+
+# Boas Práticas Utilizadas
+
+* arquitetura em camadas
+* separação entre routers, services e models
+* validação com Pydantic
+* documentação automática do FastAPI
+* injeção de dependência com `Depends`
+
+---
+
+# Melhorias Futuras
+
+* autenticação com JWT
+* cache de produtos com Redis
+* integração com `order_service`
+* testes automatizados com Pytest
+* pipeline de CI/CD
+

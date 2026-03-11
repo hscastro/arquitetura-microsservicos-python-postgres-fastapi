@@ -353,8 +353,5 @@ docker run -p 8000:8000 user_service
 * CI/CD
 * observabilidade (logs e métricas)
 
----
 
-# Licença
 
-Este projeto está sob licença MIT.
