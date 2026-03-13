@@ -20,7 +20,7 @@ def create_inventory(db: Session, inventory):
     return inventory_repository.create(db, inventory)
 
 
-def update_product(db: Session, inventory_id: int, inventory_data):
+def update_inventory(db: Session, inventory_id: int, inventory_data):
     inventory = inventory_repository.get_by_id(db, inventory_id)
 
     if not inventory:
@@ -29,7 +29,7 @@ def update_product(db: Session, inventory_id: int, inventory_data):
     return inventory_repository.update(db, inventory, inventory_data)
 
 
-def delete_product(db: Session, inventory_id: int):
+def delete_inventory(db: Session, inventory_id: int):
     inventory = inventory_repository.get_by_id(db, inventory_id)
 
     if not inventory:
