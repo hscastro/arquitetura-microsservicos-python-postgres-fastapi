@@ -1,10 +1,10 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserBase(BaseModel):
     email: str
-    password_hash: str
+    password_hash: str = Field(min_length=6, max_length=12)
     role: str
     created_at: datetime
 
