@@ -1,7 +1,12 @@
+from sqlalchemy import Column, Integer
+from app.database import Base
 
-class Inventary:
+class Inventory(Base):
+    __tablename__ = "inventaries"
 
-    def __init__(self, product_id, quantity_available, reserved_quantity):
-        self.product_id = product_id
-        self.quantity_available = quantity_available
-        self.reserved_quantity = reserved_quantity
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, nullable=False)
+    quantity_available = Column(Integer, nullable=False)
+    reserved_quantity = Column(Integer, nullable=False)
+
+

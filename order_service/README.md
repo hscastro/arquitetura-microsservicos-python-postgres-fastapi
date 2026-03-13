@@ -179,7 +179,7 @@ Response:
 ```json
 {
   "status": "ok",
-  "service": "product_service"
+  "service": "order_service"
 }
 ```
 
