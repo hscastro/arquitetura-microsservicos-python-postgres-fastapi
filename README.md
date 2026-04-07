@@ -1,96 +1,264 @@
-# Microservices E-commerce Architecture
+🧩 E-commerce Microservices Architecture (Professional README)
 
-Arquitetura baseada em **microserviços** para uma plataforma de e-commerce escalável, utilizando **FastAPI**, mensageria com **Kafka**, cache com **Redis** e observabilidade com **Prometheus + Grafana**.
+Este repositório apresenta uma arquitetura de microserviços para um sistema de e-commerce, projetada com foco em escalabilidade, manutenibilidade e baixo acoplamento, utilizando FastAPI e princípios de Clean Architecture.
 
-## Visão Geral da Arquitetura
+Cada microserviço possui responsabilidade única e expõe APIs REST bem definidas para comunicação entre serviços.
 
-Client (Web/Mobile)
-│
-▼
-API Gateway (Traefik)
-│
-┌───────────────┬───────────────┬───────────────┬───────────────┐
-▼ ▼ ▼ ▼
-Auth Service User Service Order Service Product Service
-│ │ │ │
-▼ ▼ ▼ ▼
-PostgreSQL PostgreSQL PostgreSQL PostgreSQL
+📚 Sumário
+Arquitetura
+Tecnologias
+Estrutura do Projeto
+Instalação
+Execução
+Microserviços
+Product Service
+Order Service
+Payment Service
+User Service
+Notification Service
+Inventory Service
+Integração
+Melhorias Futuras
 
-  │
-  ▼
+🏗️ Arquitetura
+Arquitetura baseada em microserviços
+Banco de dados por serviço
+Comunicação via REST (evolução para eventos)
+Clean Architecture:
+Domain → regras de negócio
+Application → casos de uso
+Infrastructure → integrações externas
+Interfaces → API
 
-Kafka (Event Streaming)
-┌───────────────┬───────────────┬───────────────┐
-▼ ▼ ▼
-Payment Service Notification Inventory Service
-│
-▼
-Redis
+⚙️ Tecnologias
+Python 3.10+
+FastAPI
+SQLAlchemy
+PostgreSQL
+Pydantic
+Uvicorn
+Docker
 
-  │
-  ▼
+📁 Estrutura Base
+```
+app/
+├── application/
+├── domain/
+├── infrastructure/
+├── interfaces/
+├── database/
+└── main.py
+```
 
-Observability (Prometheus + Grafana)
+🚀 Instalação
+git clone <repo-url>
+cd project
 
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 
-## Componentes
+pip install -r requirements.txt
 
-### API Gateway
-- **Traefik**
-- Responsável por roteamento das requisições, balanceamento de carga e entrada única da aplicação.
+▶️ Execução
+uvicorn app.main:app --reload
 
-### Core Services
-Serviços principais responsáveis pela lógica central da aplicação.
+🧩 Microserviços
+📦 Product Service
+📖 Descrição
 
-- **Auth Service** → autenticação e autorização
-- **User Service** → gerenciamento de usuários
-- **Product Service** → catálogo de produtos
-- **Order Service** → processamento de pedidos
+Gerencia produtos disponíveis no sistema.
 
-Cada serviço possui **banco PostgreSQL isolado**, seguindo o princípio de **database per service**.
+🎯 Responsabilidades
+CRUD de produtos
 
-### Event Streaming
+🔌 Exemplo de Request
 
-- **Kafka**
-- Comunicação assíncrona entre microserviços
-- Permite desacoplamento e escalabilidade do sistema.
+POST /products
+```
+{
+  "name": "Notebook Dell",
+  "description": "Notebook i7 16GB RAM",
+  "price": 4500.00
+}
+```
 
-### Async Services
+📥 Exemplo de Response
+```
+{
+  "id": 1,
+  "name": "Notebook Dell",
+  "description": "Notebook i7 16GB RAM",
+  "price": 4500.00,
+  "created_at": "2026-04-06T12:00:00"
+}
+```
 
-Serviços que reagem a eventos do sistema:
+🛒 Order Service
+📖 Descrição
 
-- **Payment Service** → processamento de pagamentos
-- **Inventory Service** → controle de estoque
-- **Notification Service** → envio de notificações
+Gerencia pedidos e orquestra o fluxo de compra.
 
-### Cache e Sessões
+🎯 Responsabilidades
+Criar pedidos
+Gerenciar itens do pedido
 
-- **Redis**
-- Utilizado para cache, sessões e otimização de performance.
+🔌 Exemplo de Request
 
-### Observabilidade
+POST /orders
+```
+{
+  "user_id": 10,
+  "items": [
+    {
+      "product_id": 1,
+      "quantity": 2
+    }
+  ]
+}
+```
 
-- **Prometheus** → coleta de métricas
-- **Grafana** → visualização e monitoramento
+📥 Exemplo de Response
+```
+{
+  "id": 100,
+  "user_id": 10,
+  "status": "CREATED",
+  "total": 9000.00,
+  "items": [
+    {
+      "product_id": 1,
+      "quantity": 2,
+      "price": 4500.00
+    }
+  ]
+}
+```
 
-## Características da Arquitetura
+💳 Payment Service
+📖 Descrição
 
-- Arquitetura baseada em **microserviços**
-- **API Gateway** centralizado
-- Comunicação **síncrona (REST)** e **assíncrona (Kafka)**
-- **Banco de dados isolado por serviço**
-- **Escalabilidade horizontal**
-- **Observabilidade integrada**
+Gerencia pagamentos dos pedidos.
 
-## Tecnologias
+🎯 Funcionalidades
+Criar pagamento
+Consultar pagamento
 
-- **FastAPI**
-- **PostgreSQL**
-- **Kafka**
-- **Redis**
-- **Traefik**
-- **Prometheus**
-- **Grafana**
-- **Docker / Docker Compose**
+🔌 Exemplo de Request
 
+POST /payments
+```
+{
+  "order_id": 100,
+  "amount": 9000.00,
+  "method": "CREDIT_CARD"
+}
+```
 
+📥 Exemplo de Response
+```
+{
+  "id": 500,
+  "order_id": 100,
+  "status": "APPROVED",
+  "amount": 9000.00,
+  "processed_at": "2026-04-06T12:05:00"
+}
+```
+👤 User Service
+📖 Descrição
+
+Gerencia usuários do sistema.
+
+🔌 Exemplo de Request
+
+POST /users
+```
+{
+  "name": "Antonio Castro",
+  "email": "antonio@email.com"
+}
+```
+
+📥 Exemplo de Response
+```
+{
+  "id": 10,
+  "name": "Antonio Castro",
+  "email": "antonio@email.com",
+  "created_at": "2026-04-06T11:50:00"
+}
+```
+
+🔔 Notification Service
+📖 Descrição
+
+Gerencia notificações do sistema.
+
+🔌 Exemplo de Request
+
+POST /notifications
+```
+{
+  "user_id": 10,
+  "message": "Seu pedido foi aprovado"
+}
+```
+
+📥 Exemplo de Response
+```
+{
+  "id": 900,
+  "user_id": 10,
+  "message": "Seu pedido foi aprovado",
+  "status": "SENT"
+}
+```
+
+📦 Inventory Service
+📖 Descrição
+
+Gerencia estoque de produtos.
+
+🎯 Responsabilidades
+Controle de estoque
+Reserva de produtos
+
+🔌 Exemplo de Request
+
+POST /inventory
+```
+{
+  "product_id": 1,
+  "available_quantity": 100,
+  "reserved_quantity": 0
+}
+```
+
+📥 Exemplo de Response
+```
+{
+  "product_id": 1,
+  "available_quantity": 100,
+  "reserved_quantity": 0,
+  "updated_at": "2026-04-06T12:10:00"
+}
+```
+🔗 Integração entre Serviços
+
+Fluxo típico:
+
+User cria pedido → Order Service
+Order consulta produtos → Product Service
+Order valida estoque → Inventory Service
+Order envia pagamento → Payment Service
+Payment confirma → Notification Service
+
+🚧 Melhorias Futuras
+JWT + OAuth2
+API Gateway
+Kafka (event-driven)
+Retry + DLQ
+Observabilidade (Prometheus + Grafana)
+Cache com Redis
+Testcontainers
